@@ -1,16 +1,17 @@
 * {
     background-color: #0D0D0D;
+    margin: 0;
+    overflow-x: hidden;
 }
 
 .navbar {
-    padding: 0;
-    margin: 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding-left: 50px;
     padding-right: 60px;
-    background-color: #0D0D0D;
+    padding-top: 10px;
+    background: transparent;
     color: white;
 }
 
@@ -34,8 +35,10 @@
 
 .social-links {
     position: fixed;
-    right: 2em;
-    top: 25%;
+    right: 30px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: all;
 }
 
 .social-links ul {
@@ -52,27 +55,63 @@
     height: 50px;
 }
 
+.hero {
+    width: 100%;
+    margin: 0 auto;
+    max-width: 1600px;
+    /* pointer-events: none;
+    user-select: none; */
+}
+
 .hero-section {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     color: white;
-    display: flex;
-    border: 2px solid #FFFFFF;
+    gap: 200px;
 }
 
-.hero-image {
-    width: 400px;
-    height: 400px;
-    display: flex;
-    position: absolute;
-    margin: 50%;
+.hero-content {
+    text-align: left;
+    overflow: visible;
 }
 
-.hero-section h1 {
-    font-size: 3em;
+.hero-content h1 {
+    font-size: 4rem;
+    font-weight: 800;
     font-family: 'League Spartan', sans-serif;
-    font-weight: 700;
+    overflow: visible;
+}
+
+.hero-content p {
+    font-size: 1.2rem;
+    font-weight: 400;
+    margin-top: 10px;
+    font-family: 'Outfit', sans-serif;
+}
+
+.hero-image img {
+    width: 400px;
+    height: auto;
+}
+
+.abt-me-btn {
+    margin-top: 30px;
+    display: inline-block;
+    padding: 12px 28px;
+    background: linear-gradient(135deg, #ff4d4d, #ff1a1a);
+    color: white;
+    font-weight: 600;
+    font-family: 'Outfit', sans-serif;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(255, 30, 30, 0.6);
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+    user-select: none;
+    text-align: center;
+}
+
+.abt-me-btn:hover {
+    box-shadow: 0 0 20px rgba(255, 50, 50, 0.9), 0 0 40px rgba(255, 50, 50, 0.6);
+    transform: translateY(-2px);
 }
