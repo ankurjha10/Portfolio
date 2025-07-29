@@ -59,8 +59,8 @@
     width: 100%;
     margin: 0 auto;
     max-width: 1600px;
-    /* pointer-events: none;
-    user-select: none; */
+    pointer-events: none;
+    user-select: none;
 }
 
 .hero-section {
