@@ -1,117 +1,199 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+
 * {
-    background-color: #0D0D0D;
     margin: 0;
-    overflow-x: hidden;
+    padding: 0;
+    background: transparent;
+}
+
+header {
+    height: 100vh;
+    position: relative;
 }
 
 .navbar {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+}
+
+.navbar img {
+    width: 100px;
+    padding: 1px;
     padding-left: 50px;
-    padding-right: 60px;
-    padding-top: 10px;
-    background: transparent;
-    color: white;
 }
 
-.nav-links {
-    list-style-type: none;
+.resumeBtn {
     display: flex;
-    gap: 20px;
-}
-
-.nav-links li a {
-    text-decoration: none;
-    color: white;
-    font-family: 'Outfit';
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: 18px;
+    font-family: 'Outfit', sans-serif;
     font-weight: 600;
+    background-color: black;
+    color: white;
+    padding: 10px 24px;
+    border-radius: 20px;
+    margin-left: auto;
+    margin-right: 50px;
+    cursor: pointer;
+    position: relative;
+    z-index: 0;
+    background-clip: padding-box;
+    border: 3px solid transparent;
+    background-image:
+        linear-gradient(black, black),
+        linear-gradient(135deg, #D32F2F, #C62828, #D32F2F);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    transition: all 0.4s ease;
+    background-size: 100% 100%, 200% 200%;
+    background-position: center, 0% 0%;
 }
 
-.social-links svg {
-    width: 32px;
-    height: 32px;
+.resumeBtn:hover {
+    background-position: center, 100% 100%;
+    transform: scale(1.03);
+    background-image:
+        linear-gradient(135deg, #D32F2F, #C62828),
+        linear-gradient(135deg, #D32F2F, #C62828, #D32F2F);
+    color: white;
+}
+
+.resumeBtn svg {
+    width: 20px;
+    stroke: white;
+    fill: none;
+    background: transparent;
+}
+
+.resumeBtn:active {
+    background-image:
+        linear-gradient(135deg, #B71C1C, #8B0000),
+        linear-gradient(135deg, #D32F2F, #C62828, #D32F2F);
+    color: #e0e0e0;
 }
 
 .social-links {
-    position: fixed;
-    right: 30px;
-    top: 50%;
-    transform: translateY(-50%);
-    pointer-events: all;
-}
-
-.social-links ul {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 25px;
+    position: fixed;
+    top: 25%;
+    right: 30px;
 }
 
-.social-links li {
+.social-icon {
+    width: 30px;
+    height: 30px;
     display: flex;
-    justify-content: center;
     align-items: center;
-    width: 50px;
-    height: 50px;
+    justify-content: center;
+    transition: transform 0.3s ease;
 }
 
-.hero {
-    width: 100%;
-    margin: 0 auto;
-    max-width: 1600px;
-    pointer-events: none;
-    user-select: none;
+.social-icon:hover {
+    transform: scale(1.2);
 }
 
 .hero-section {
     display: flex;
     justify-content: center;
-    align-items: center;
-    color: white;
     gap: 200px;
+    text-align: center;
+    color: white;
 }
 
 .hero-content {
+    font-family: 'Outfit', sans-serif;
+    position: relative;
+    top: 60px;
+    left: 10px;
+    height: 100%;
     text-align: left;
-    overflow: visible;
 }
 
 .hero-content h1 {
-    font-size: 4rem;
-    font-weight: 800;
-    font-family: 'League Spartan', sans-serif;
+    font-size: 68px;
+    margin-bottom: 20px;
+}
+
+.hero-image {
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
     overflow: visible;
+    position: relative;
+    right: 200px;
+    bottom: 50px;
+    background: transparent;
 }
 
-.hero-content p {
-    font-size: 1.2rem;
-    font-weight: 400;
-    margin-top: 10px;
+.aboutBtn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: 18px;
     font-family: 'Outfit', sans-serif;
-}
-
-.hero-image img {
-    width: 400px;
-    height: auto;
-}
-
-.abt-me-btn {
-    margin-top: 30px;
-    display: inline-block;
-    padding: 12px 28px;
-    background: linear-gradient(135deg, #ff4d4d, #ff1a1a);
-    color: white;
     font-weight: 600;
-    font-family: 'Outfit', sans-serif;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(255, 30, 30, 0.6);
-    transition: all 0.3s ease-in-out;
+    background-color: black;
+    color: white;
+    padding: 10px 22px;
+    border-radius: 20px;
+    margin-left: auto;
+    margin-top: 24px;
+    margin-right: 50%;
     cursor: pointer;
-    user-select: none;
-    text-align: center;
+    position: relative;
+    z-index: 0;
+    background-clip: padding-box;
+    border: 3px solid transparent;
+    background-image:
+        linear-gradient(black, black),
+        linear-gradient(135deg, #D32F2F, #C62828, #D32F2F);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    transition: all 0.4s ease;
+    background-size: 100% 100%, 200% 200%;
+    background-position: center, 0% 0%;
 }
 
-.abt-me-btn:hover {
-    box-shadow: 0 0 20px rgba(255, 50, 50, 0.9), 0 0 40px rgba(255, 50, 50, 0.6);
-    transform: translateY(-2px);
+.aboutBtn:hover {
+    background-position: center, 100% 100%;
+    transform: scale(1.03);
+    background-image:
+        linear-gradient(135deg, #D32F2F, #C62828),
+        linear-gradient(135deg, #D32F2F, #C62828, #D32F2F);
+    color: white;
+}
+
+.aboutBtn svg {
+    width: 20px;
+    stroke: white;
+    fill: none;
+    background: transparent;
+}
+
+#element {
+    background: linear-gradient(135deg, #ff0000, #ffffff, #ff0000);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    /* fallback */
+    color: transparent;
+}
+
+#vanta-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.main-section {
+    position: relative;
+    z-index: 2;
 }
