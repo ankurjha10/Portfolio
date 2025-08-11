@@ -224,7 +224,7 @@ body {
 
 /* Vertical Social Links */
 .vertical-social {
-    position: fixed;
+    position: absolute;
     right: 2rem;
     top: 50%;
     transform: translateY(-50%);
@@ -254,10 +254,8 @@ body {
     width: 24px;
     height: 24px;
     pointer-events: none;
-    /* so hover triggers on the link, not svg */
     display: block;
 }
-
 
 .vertical-social-link:hover {
     background: rgba(100, 255, 218, 0.15);
@@ -273,6 +271,8 @@ section {
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
+    /* Added for absolute positioning context */
 }
 
 .section-content {
@@ -310,47 +310,275 @@ section {
     flex-wrap: wrap;
 }
 
+
+/* Base button styles - consistent for both buttons */
 .btn {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
     padding: 1rem 2rem;
     border-radius: 12px;
     text-decoration: none;
     font-weight: 500;
     transition: all 0.3s ease;
     backdrop-filter: blur(10px);
-}
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    position: relative;
+    overflow: hidden;
+    height: 56px;
+    white-space: nowrap;
+    min-width: 180px;
 
-.btn-primary {
+    /* Consistent styling for both buttons */
     background: rgba(100, 255, 218, 0.2);
     border: 1px solid rgba(100, 255, 218, 0.3);
     color: #64ffda;
 }
 
-.btn-primary:hover {
+/* Consistent hover effects for both buttons */
+.btn:hover:not(.loading) {
     background: rgba(100, 255, 218, 0.3);
-    transform: translateY(-2px);
-}
-
-.btn-secondary {
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: white;
-}
-
-.btn-resume {
-    background: linear-gradient(135deg, rgba(100, 255, 218, 0.2), rgba(187, 134, 252, 0.2));
-    border: 1px solid rgba(100, 255, 218, 0.3);
-    color: #64ffda;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.btn-resume:hover {
-    background: linear-gradient(135deg, rgba(100, 255, 218, 0.3), rgba(187, 134, 252, 0.3));
     transform: translateY(-2px);
     box-shadow: 0 10px 30px rgba(100, 255, 218, 0.2);
 }
+
+/* Remove the separate .btn-primary styles since we want consistency */
+.btn-primary {
+    /* All styling now comes from .btn base class */
+}
+
+/* Resume button specific styles (only for loading states) */
+.btn-resume {
+    /* All visual styling now comes from .btn base class */
+}
+
+.btn-resume.loading {
+    background: rgba(100, 255, 218, 0.1);
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* Button content wrapper - improved alignment */
+.btn-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    /* Changed from opacity to all for synchronized movement */
+    width: 100%;
+    height: 100%;
+}
+
+/* Loading content */
+.loading-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+}
+
+.btn-resume.loading .btn-content {
+    opacity: 0;
+}
+
+.btn-resume.loading .loading-content {
+    opacity: 1;
+}
+
+/* Spinner */
+.spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(100, 255, 218, 0.3);
+    border-top: 2px solid #64ffda;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Download icon - improved alignment and synchronized movement */
+.download-icon {
+    width: 20px;
+    height: 20px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Remove the separate hover effect for the icon since it now moves with the button */
+.btn-resume:hover:not(.loading) .download-icon {
+    /* Removed translateY since the entire button moves up */
+    transform: none;
+}
+
+/* Toast Notification Styles (unchanged) */
+.toast-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.toast {
+    background: linear-gradient(135deg, rgba(100, 255, 218, 0.15), rgba(187, 134, 252, 0.15));
+    border: 1px solid rgba(100, 255, 218, 0.3);
+    border-radius: 12px;
+    padding: 1rem 1.5rem;
+    color: #64ffda;
+    backdrop-filter: blur(10px);
+    transform: translateX(400px);
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    box-shadow: 0 8px 32px rgba(100, 255, 218, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-weight: 500;
+    min-width: 280px;
+}
+
+.toast.show {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.toast-icon {
+    font-size: 24px;
+    animation: bounce 0.6s ease-in-out;
+}
+
+@keyframes bounce {
+
+    0%,
+    20%,
+    60%,
+    100% {
+        transform: translateY(0);
+    }
+
+    40% {
+        transform: translateY(-5px);
+    }
+
+    80% {
+        transform: translateY(-2px);
+    }
+}
+
+.progress-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #64ffda, #bb86fc);
+    border-radius: 0 0 12px 12px;
+    transform: scaleX(0);
+    transform-origin: left;
+    animation: progress 2.5s linear;
+}
+
+@keyframes progress {
+    0% {
+        transform: scaleX(0);
+    }
+
+    100% {
+        transform: scaleX(1);
+    }
+}
+
+.toast.success .toast-icon {
+    animation: successPulse 0.6s ease-in-out;
+}
+
+@keyframes successPulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.2);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Demo container styles (unchanged) */
+.demo-container {
+    text-align: center;
+    max-width: 600px;
+    padding: 2rem;
+}
+
+.demo-container h1 {
+    color: #64ffda;
+    margin-bottom: 1rem;
+    font-size: 2.5rem;
+    background: linear-gradient(135deg, #64ffda, #bb86fc);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.demo-container p {
+    color: #8892b0;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .btn {
+        padding: 0.875rem 1.5rem;
+        font-size: 14px;
+        min-width: 160px;
+        height: 50px;
+    }
+
+    .download-icon {
+        width: 18px;
+        height: 18px;
+    }
+
+    .spinner {
+        width: 18px;
+        height: 18px;
+    }
+}
+
+@media (max-width: 480px) {
+    .btn {
+        padding: 0.75rem 1.25rem;
+        font-size: 14px;
+        min-width: 140px;
+        height: 48px;
+        gap: 0.375rem;
+    }
+}
+
 
 /* Glass Cards */
 .glass-card {
@@ -405,102 +633,296 @@ section {
     text-align: left;
 }
 
+.scroll-to-top {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    padding: 12px;
+    /* equal padding for perfect circle */
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease, opacity 0.3s ease, visibility 0.3s ease;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+}
+
+.scroll-to-top svg {
+    width: 20px;
+    /* bigger icon */
+    height: 20px;
+}
+
+
+.scroll-to-top.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.scroll-to-top:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-3px) scale(1.05);
+}
+
+.scroll-to-top:active {
+    transform: scale(0.95);
+}
+
+/* Skills Section */
 /* Skills Section */
 .skills {
     padding: 4rem 2rem;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.02) 0%, rgba(100, 255, 218, 0.02) 100%);
 }
 
 .skills h2 {
     text-align: center;
-    font-size: 2.5rem;
+    font-size: clamp(2rem, 4vw, 2.5rem);
     margin-bottom: 3rem;
     color: #64ffda;
+    font-weight: 600;
+    position: relative;
 }
 
+.skills h2::after {
+    content: '';
+    position: absolute;
+    bottom: -0.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, #64ffda, #00d4aa);
+    border-radius: 2px;
+}
+
+/* Responsive Grid Container - Fixed spacing issue */
 .skills-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 2rem;
-    max-width: 1000px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: clamp(1rem, 2.5vw, 2rem);
+    max-width: 1200px;
     margin: 0 auto;
+    padding: 0 1rem;
+    justify-content: center;
 }
 
+/* Individual Skill Cards */
 .skill-item {
-    background: rgba(255, 255, 255, 0.05);
-    padding: 2rem 1rem;
-    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.03);
+    padding: clamp(1.5rem, 3vw, 2.5rem) clamp(1rem, 2vw, 1.5rem);
+    border-radius: 16px;
     text-align: center;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    transition: all 0.3s ease;
-    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(12px);
+    position: relative;
+    overflow: hidden;
+    min-height: 140px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 200px;
+    flex-shrink: 0;
+}
+
+/* Subtle gradient overlay */
+.skill-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(100, 255, 218, 0.02) 0%, rgba(0, 212, 170, 0.02) 100%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+}
+
+.skill-item:hover::before {
+    opacity: 1;
 }
 
 .skill-item:hover {
-    background: rgba(255, 255, 255, 0.1);
-    transform: translateY(-10px);
-    border-color: rgba(100, 255, 218, 0.3);
+    background: rgba(255, 255, 255, 0.06);
+    transform: translateY(-8px) scale(1.02);
+    border-color: rgba(100, 255, 218, 0.25);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15),
+        0 0 0 1px rgba(100, 255, 218, 0.1);
 }
 
+/* SVG Icon Container - Increased size for better visibility */
 .skill-icon {
-    font-size: 3rem;
-    margin-bottom: 1rem;
-    display: block;
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 1rem auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 12px;
+    padding: 8px;
+}
+
+/* Ensure all SVGs fit consistently within the container */
+.skill-icon svg {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+    max-width: 48px;
+    max-height: 48px;
+}
+
+.skill-item:hover .skill-icon svg {
+    transform: scale(1.15);
+}
+
+/* Alternative: If using icon fonts instead of SVGs */
+.skill-icon i {
+    font-size: 4rem;
+    line-height: 1;
+    transition: transform 0.3s ease;
+}
+
+.skill-item:hover .skill-icon i {
+    transform: scale(1.15);
 }
 
 .skill-name {
-    font-size: 1rem;
+    font-size: clamp(0.875rem, 1.5vw, 1rem);
     font-weight: 500;
     color: rgba(255, 255, 255, 0.9);
+    margin: 0;
+    position: relative;
+    z-index: 1;
+    letter-spacing: 0.025em;
 }
 
-/* Skill specific colors */
-.skill-html svg {
-    fill: #E34F26;
+/* Responsive Breakpoints */
+@media (max-width: 768px) {
+    .skills {
+        padding: 3rem 1rem;
+    }
+
+    .skill-item {
+        width: 160px;
+        min-height: 120px;
+        padding: 1.5rem 1rem;
+    }
+
+    .skill-icon {
+        width: 56px;
+        height: 56px;
+        padding: 6px;
+    }
+
+    .skill-icon svg {
+        max-width: 44px;
+        max-height: 44px;
+    }
 }
 
-.skill-node .skill-icon {
-    color: #339933;
+@media (max-width: 480px) {
+    .skill-item {
+        width: 140px;
+        min-height: 100px;
+        padding: 1.25rem 0.75rem;
+    }
+
+    .skill-icon {
+        width: 48px;
+        height: 48px;
+        margin-bottom: 0.75rem;
+        padding: 4px;
+    }
+
+    .skill-icon svg {
+        max-width: 40px;
+        max-height: 40px;
+    }
+
+    .skill-icon i {
+        font-size: 3rem;
+    }
 }
 
-.skill-python .skill-icon {
-    color: #3776AB;
+/* Large screens optimization */
+@media (min-width: 1200px) {
+    .skill-item {
+        width: 220px;
+    }
+
+    .skill-icon {
+        width: 72px;
+        height: 72px;
+        padding: 10px;
+    }
+
+    .skill-icon svg {
+        max-width: 52px;
+        max-height: 52px;
+    }
+
+    .skill-icon i {
+        font-size: 4.5rem;
+    }
 }
 
-.skill-typescript .skill-icon {
-    color: #3178C6;
+/* Optional: Add animation on scroll */
+@media (prefers-reduced-motion: no-preference) {
+    .skill-item {
+        animation: fadeInUp 0.6s ease-out forwards;
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    .skill-item:nth-child(1) {
+        animation-delay: 0.1s;
+    }
+
+    .skill-item:nth-child(2) {
+        animation-delay: 0.2s;
+    }
+
+    .skill-item:nth-child(3) {
+        animation-delay: 0.3s;
+    }
+
+    .skill-item:nth-child(4) {
+        animation-delay: 0.4s;
+    }
+
+    .skill-item:nth-child(5) {
+        animation-delay: 0.5s;
+    }
+
+    .skill-item:nth-child(6) {
+        animation-delay: 0.6s;
+    }
+
+    .skill-item:nth-child(7) {
+        animation-delay: 0.7s;
+    }
 }
 
-.skill-mongodb .skill-icon {
-    color: #47A248;
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-.skill-postgresql .skill-icon {
-    color: #336791;
-}
 
-.skill-aws .skill-icon {
-    color: #FF9900;
-}
-
-.skill-docker .skill-icon {
-    color: #2496ED;
-}
-
-.skill-javascript .skill-icon {
-    color: #F7DF1E;
-}
-
-.skill-git .skill-icon {
-    color: #F05032;
-}
-
-.skill-figma .skill-icon {
-    color: #F24E1E;
-}
-
-.skill-vue .skill-icon {
-    color: #4FC08D;
-}
 
 /* Projects Section */
 .projects h2 {
