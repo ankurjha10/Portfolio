@@ -165,6 +165,7 @@ body {
     }
 }
 
+
 /* Content Layout */
 .content-wrapper {
     position: relative;
@@ -674,12 +675,22 @@ section {
 }
 
 /* Skills Section */
-/* Skills Section */
 .skills {
     padding: 4rem 2rem;
     background: linear-gradient(135deg, rgba(0, 0, 0, 0.02) 0%, rgba(100, 255, 218, 0.02) 100%);
 }
 
+.skill-heading{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.skill-heading svg{
+    width: 50px;
+    height: 50px;
+    position: relative;
+    top: 11px;
+}
 .skills h2 {
     text-align: center;
     font-size: clamp(2rem, 4vw, 2.5rem);
@@ -689,17 +700,6 @@ section {
     position: relative;
 }
 
-.skills h2::after {
-    content: '';
-    position: absolute;
-    bottom: -0.5rem;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 60px;
-    height: 3px;
-    background: linear-gradient(90deg, #64ffda, #00d4aa);
-    border-radius: 2px;
-}
 
 /* Responsive Grid Container - Fixed spacing issue */
 .skills-grid {
