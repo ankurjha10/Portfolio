@@ -46,8 +46,8 @@ export function SplashScreen() {
   const [visible, setVisible] = useState(true)
 
   // TIMING
-  const displayDuration = 400
-  const fadeDuration = 200
+  const displayDuration = 350
+  const fadeDuration = 150
 
   // Control body overflow and content visibility when splash is active
   useEffect(() => {
