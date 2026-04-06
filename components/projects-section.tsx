@@ -1,42 +1,65 @@
 "use client"
 
-import { useEffect, useRef } from "react"
-import { ExternalLink, Github, Clock } from "lucide-react"
+import { useRef } from "react"
+import { ExternalLink, Github, Terminal, CheckCircle2, LayoutTemplate } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { motion, useInView } from "framer-motion"
+import { cn } from "@/lib/utils"
 
 const projects = [
   {
-    title: "Shortify - A URL Shortener",
+    title: "Shortify — High Performance URL Shortener",
     description:
-      "A simple and fast URL shortener built using Java and Spring Boot. Features include custom short codes, click analytics, and RESTful API endpoints.",
-    tech: ["Java", "Spring Boot", "MySQL", "REST API"],
+      "Engineered a scalable, highly available URL shortening service. Focused heavily on backend performance, utilizing caching mechanisms to ensure millisecond-level redirect resolution under concurrent loads.",
+    features: [
+      "Sub-50ms redirect resolution via optimized indexing",
+      "Stateless token-based rate limiting",
+      "Real-time click tracking & analytics dashboard",
+    ],
+    tech: ["Java 25", "Spring Boot", "MySQL", "REST APIs"],
     github: "https://github.com/ankurjha10/Shortify-A-URL-Shortener.git",
     demo: "https://shorttify.netlify.app/",
     image: "/url-shortener-dashboard-with-analytics.jpg",
+    featured: true,
   },
   {
-    title: "Gigzy Freelancing Platform",
+    title: "Gigzy Marketplace",
     description:
-      "A basic freelance marketplace prototype built with the MERN stack. Includes user authentication, gig posting, and a simple order system.",
-    tech: ["MongoDB", "Express", "React", "Node.js"],
+      "Developed a full-stack dual-sided freelance marketplace. Implemented secure session management, robust transactional order models, and complex state filtering.",
+    features: [
+      "Role-Based Access Control (RBAC)",
+      "Transactional gig ordering system",
+      "Dynamic state filtering",
+    ],
+    tech: ["Node.js", "Express", "MongoDB", "React", "JWT Auth"],
     github: "https://github.com/ankurjha10/GigzyFreelancingPlatform.git",
     demo: "https://gigzy-freelancing-platform.vercel.app/",
     image: "/freelance-marketplace-platform-interface.jpg",
   },
   {
-    title: "Face Recognition System",
+    title: "Real-time Face Recognition",
     description:
-      "A browser-based face recognition tool using face-api.js. Supports real-time face detection, landmark recognition, and expression analysis.",
+      "Built a browser-first detection engine utilizing WebRTC and machine learning. Offloaded heavy vector calculations to browser WebGL to ensure zero-latency client processing.",
+    features: [
+      "Multi-face landmark recognition",
+      "Live expression & age analytics",
+      "Zero-latency WebRTC streams",
+    ],
     tech: ["JavaScript", "React", "face-api.js", "WebRTC"],
     github: "https://github.com/ankurjha10/Advance-Face-Recognition.git",
     demo: "https://advance-face-recognition.vercel.app/",
     image: "/face-recognition-system-with-detection-boxes.jpg",
   },
   {
-    title: "Coming Soon",
+    title: "Currently Building",
     description:
-      "More exciting projects are in development. Stay tuned for updates on new backend systems and full-stack applications.",
-    tech: [],
+      "Architecting a distributed messaging queue system in Java designed for high-throughput, fault-tolerant microservice communication.",
+    features: [
+      "Eventual consistency patterns",
+      "Broker node replication",
+      "Dead-letter queues",
+    ],
+    tech: ["Java", "Docker", "Microservices", "Kafka"],
     github: null,
     demo: null,
     image: null,
@@ -45,95 +68,138 @@ const projects = [
 ]
 
 export function ProjectsSection() {
-  const sectionRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("opacity-100", "translate-y-0")
-            entry.target.classList.remove("opacity-0", "translate-y-8")
-          }
-        })
-      },
-      { threshold: 0.1 },
-    )
-
-    const elements = sectionRef.current?.querySelectorAll(".fade-up")
-    elements?.forEach((el) => observer.observe(el))
-
-    return () => observer.disconnect()
-  }, [])
+  const ref = useRef<HTMLDivElement>(null)
+  const isInView = useInView(ref, { once: true, margin: "-100px" })
 
   return (
-    <section id="projects" ref={sectionRef} className="py-24">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="fade-up opacity-0 translate-y-8 transition-all duration-700 text-3xl sm:text-4xl font-bold mb-4">
+    <section id="projects" className="py-24 relative overflow-hidden bg-background">
+      <div
+        ref={ref}
+        className="relative max-w-6xl mx-auto px-5 sm:px-6 lg:px-8"
+        data-visible={isInView}
+      >
+        <div className="text-center mb-16 fade-up-el delay-0">
+          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-gray-900 dark:text-white">
             Featured Projects
           </h2>
-          <p className="fade-up opacity-0 translate-y-8 transition-all duration-700 text-muted-foreground max-w-2xl mx-auto">
-            A selection of projects showcasing my skills in backend development and full-stack applications
+          <div className="mt-4 w-16 h-1 bg-gradient-to-r from-[#00d47a] to-transparent dark:from-[#00ff9f] mx-auto rounded-full" />
+          <p className="mt-4 text-sm sm:text-base text-gray-500 dark:text-gray-400 max-w-2xl mx-auto">
+            A selection of production-grade systems showcasing my backend architecture, system design, and full-stack capabilities.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-6">
-          {projects.map((project, index) => (
-            <div
-              key={project.title}
-              className="fade-up opacity-0 translate-y-8 transition-all duration-700"
-              style={{ transitionDelay: `${(index + 1) * 100}ms` }}
-            >
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {projects.map((project, index) => {
+            const isFeatured = project.featured;
+
+            return (
               <div
-                className={`h-full rounded-xl border overflow-hidden transition-all duration-300 hover:shadow-xl group ${
-                  project.placeholder
-                    ? "border-dashed border-border/50 bg-muted/20"
-                    : "border-border bg-card hover:border-primary/50 hover:shadow-primary/5"
-                }`}
+                key={project.title}
+                className={cn(
+                  "fade-up-el group flex flex-col rounded-2xl overflow-hidden border transition-all duration-500",
+                  "bg-white/40 dark:bg-white/[0.02] backdrop-blur-sm",
+                  "border-black/5 dark:border-white/10",
+                  "hover:border-[#00d47a]/50 dark:hover:border-[#00ff9f]/50",
+                  "hover:shadow-[0_0_30px_rgba(0,212,122,0.1)] dark:hover:shadow-[0_0_30px_rgba(0,255,159,0.1)]",
+                  "hover:-translate-y-1 transform-gpu",
+                  isFeatured ? "lg:col-span-2 lg:flex-row" : "col-span-1",
+                  project.placeholder && "border-dashed bg-transparent shadow-none hover:shadow-none"
+                )}
+                style={isInView ? { animationDelay: `${(index + 1) * 150}ms` } : undefined}
               >
+
                 {project.placeholder ? (
-                  <div className="h-full flex flex-col items-center justify-center p-12 text-center min-h-[300px]">
-                    <Clock className="h-12 w-12 text-muted-foreground/50 mb-4" />
-                    <h3 className="text-xl font-semibold text-muted-foreground mb-2">{project.title}</h3>
-                    <p className="text-muted-foreground/70 text-sm">{project.description}</p>
+                  <div className="w-full relative min-h-[350px] flex flex-col items-center justify-center p-10 text-center bg-gray-50/50 dark:bg-[#0c1018]/50">
+                    <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_60%_at_50%_40%,rgba(0,255,159,0.05),transparent)] pointer-events-none" />
+                    <Terminal className="h-12 w-12 text-[#00d47a] dark:text-[#00ff9f] mb-4 opacity-80" />
+                    <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+                      {project.title}
+                    </h3>
+                    <p className="text-gray-600 dark:text-gray-400 max-w-md mx-auto mb-6">
+                      {project.description}
+                    </p>
+                    <div className="flex flex-wrap gap-2 justify-center mb-6">
+                      {project.tech.map((t) => (
+                        <span key={t} className="px-3 py-1 text-xs font-semibold bg-black/5 dark:bg-white/10 text-gray-700 dark:text-gray-300 rounded-md">
+                          {t}
+                        </span>
+                      ))}
+                    </div>
+                    <div className="flex flex-col items-start gap-2 text-sm text-gray-500 dark:text-gray-400 text-left">
+                      {project.features.map(f => (
+                        <div key={f} className="flex items-center gap-2">
+                          <LayoutTemplate className="w-3.5 h-3.5 text-[#00d47a]/50 dark:text-[#00ff9f]/50" />
+                          <span>{f}</span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 ) : (
                   <>
-                    <div className="relative h-48 overflow-hidden bg-muted">
+                    <div className={cn(
+                      "relative overflow-hidden bg-muted",
+                      isFeatured ? "lg:w-[50%] lg:min-h-[400px] h-64" : "h-56 w-full"
+                    )}>
                       <img
                         src={project.image || "/placeholder.svg"}
                         alt={project.title}
-                        className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                        className="w-full h-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-110"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent opacity-80 group-hover:opacity-40 transition-opacity duration-500" />
                     </div>
-                    <div className="p-6">
-                      <h3 className="text-xl font-semibold mb-2 group-hover:text-primary transition-colors">
+
+                    <div className={cn(
+                      "flex flex-col p-6 sm:p-8 flex-1",
+                      isFeatured ? "lg:w-[50%] lg:justify-center" : ""
+                    )}>
+                      <h3 className="text-xl sm:text-2xl font-bold mb-3 text-gray-900 dark:text-white group-hover:text-[#00d47a] dark:group-hover:text-[#00ff9f] transition-colors">
                         {project.title}
                       </h3>
-                      <p className="text-muted-foreground text-sm mb-4 line-clamp-2">{project.description}</p>
-                      <div className="flex flex-wrap gap-2 mb-5">
+
+                      <p className="text-gray-600 dark:text-gray-400 text-sm sm:text-base leading-relaxed mb-5">
+                        {project.description}
+                      </p>
+
+                      <ul className="mb-6 space-y-2">
+                        {project.features.map((feature, i) => (
+                          <li key={i} className="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-300">
+                            <CheckCircle2 className="w-4 h-4 mt-0.5 text-[#00d47a] dark:text-[#00ff9f] flex-shrink-0" />
+                            <span className="leading-tight">{feature}</span>
+                          </li>
+                        ))}
+                      </ul>
+
+                      <div className="flex flex-wrap gap-2 mb-8 mt-auto">
                         {project.tech.map((t) => (
                           <span
                             key={t}
-                            className="px-2.5 py-1 text-xs font-medium bg-primary/10 text-primary rounded-md"
+                            className="px-2.5 py-1 text-[11px] uppercase tracking-wider font-semibold bg-[#00d47a]/10 dark:bg-[#00ff9f]/10 text-[#00b368] dark:text-[#00ff9f] rounded-md border border-[#00d47a]/20 dark:border-[#00ff9f]/20"
                           >
                             {t}
                           </span>
                         ))}
                       </div>
+
                       <div className="flex gap-3">
-                        <Button variant="outline" size="sm" asChild>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          asChild
+                          className="bg-transparent border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-white/5 hover:text-gray-900 dark:hover:text-white transition-colors"
+                        >
                           <a href={project.github!} target="_blank" rel="noopener noreferrer">
                             <Github className="h-4 w-4 mr-2" />
-                            GitHub
+                            View Code
                           </a>
                         </Button>
-                        <Button variant="ghost" size="sm" asChild>
+                        <Button
+                          size="sm"
+                          asChild
+                          className="bg-[#00d47a] hover:bg-[#00b368] dark:bg-[#00ff9f] dark:hover:bg-[#00d47a] text-black font-semibold transition-colors shadow-none"
+                        >
                           <a href={project.demo!} target="_blank" rel="noopener noreferrer">
                             <ExternalLink className="h-4 w-4 mr-2" />
-                            Live Demo
+                            Live App
                           </a>
                         </Button>
                       </div>
@@ -141,10 +207,30 @@ export function ProjectsSection() {
                   </>
                 )}
               </div>
-            </div>
-          ))}
+            )
+          })}
         </div>
       </div>
+
+      <style>{`
+        .fade-up-el {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        [data-visible="true"] .fade-up-el {
+          animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes fadeUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      `}</style>
     </section>
   )
 }

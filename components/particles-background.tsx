@@ -1,76 +1,83 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { useTheme } from "next-themes"
-import Particles, { initParticlesEngine } from "@tsparticles/react"
-import { loadSnowPreset } from "@tsparticles/preset-snow"
-import type { Engine } from "@tsparticles/engine"
+
+
+const PARTICLE_COUNT = 30
+
+interface Particle {
+  id: number
+  x: number
+  y: number
+  size: number
+  opacity: number
+  duration: number
+  delay: number
+}
+
+function generateParticles(): Particle[] {
+  return Array.from({ length: PARTICLE_COUNT }, (_, i) => ({
+    id: i,
+    x: Math.random() * 100,
+    y: Math.random() * 100,
+    size: Math.random() * 2.5 + 0.5,
+    opacity: Math.random() * 0.4 + 0.1,
+    duration: Math.random() * 15 + 20, // 20-35s fall time
+    delay: Math.random() * 15,
+  }))
+}
 
 export function ParticlesBackground() {
-  const [init, setInit] = useState(false)
-  const { theme, resolvedTheme } = useTheme()
-  const [mounted, setMounted] = useState(false)
+  const [particles, setParticles] = useState<Particle[]>([])
 
   useEffect(() => {
-    setMounted(true)
-    initParticlesEngine(async (engine: Engine) => {
-      await loadSnowPreset(engine)
-    }).then(() => {
-      setInit(true)
-    })
+    setParticles(generateParticles())
   }, [])
 
-  if (!init || !mounted) {
-    return null
-  }
-
-  // Determine the actual theme being used
-  const currentTheme = theme === "system" ? resolvedTheme : theme
-  const particleColor = currentTheme === "dark" ? "#ffffff" : "#000000"
+  if (particles.length === 0) return null
 
   return (
-    <Particles
-      id="tsparticles"
-      className="absolute inset-0 -z-10"
-      options={{
-        preset: "snow",
-        background: {
-          color: {
-            value: "transparent",
-          },
-        },
-        particles: {
-          color: {
-            value: particleColor,
-          },
-          move: {
-            direction: "bottom",
-            enable: true,
-            outModes: {
-              default: "out",
-            },
-            random: false,
-            speed: 2,
-            straight: false,
-          },
-          number: {
-            density: {
-              enable: true,
-            },
-            value: 80,
-          },
-          opacity: {
-            value: { min: 0.3, max: 0.7 },
-          },
-          shape: {
-            type: "circle",
-          },
-          size: {
-            value: { min: 1, max: 3 },
-          },
-        },
-        detectRetina: true,
-      }}
-    />
+    <>
+      <div className="fixed inset-0 -z-10 pointer-events-none overflow-hidden" aria-hidden="true">
+        {particles.map((p) => (
+          <div
+            key={p.id}
+            className="absolute rounded-full bg-white particle-fall"
+            style={{
+              left: `${p.x}%`,
+              width: p.size,
+              height: p.size,
+              opacity: p.opacity,
+              animationDuration: `${p.duration}s`,
+              animationDelay: `${p.delay}s`,
+            }}
+          />
+        ))}
+      </div>
+      <style>{`
+        @keyframes particleFall {
+          0% {
+            transform: translateY(-5vh) translateX(0);
+            opacity: 0;
+          }
+          10% {
+            opacity: 1;
+          }
+          90% {
+            opacity: 1;
+          }
+          100% {
+            transform: translateY(105vh) translateX(20px);
+            opacity: 0;
+          }
+        }
+        .particle-fall {
+          animation-name: particleFall;
+          animation-timing-function: linear;
+          animation-iteration-count: infinite;
+          will-change: transform;
+        }
+      `}</style>
+    </>
   )
 }

@@ -16,7 +16,7 @@ export function SplashScreenProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsSplashVisible(false)
-    }, 5700)
+    }, 2500)
 
     return () => clearTimeout(timer)
   }, [])

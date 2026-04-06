@@ -1,99 +1,152 @@
 "use client"
 
-import { useEffect, useRef } from "react"
-import { Code2, Server, Layout, Database, Wrench } from "lucide-react"
+import { useRef } from "react"
+import { motion, useInView } from "framer-motion"
+import { cn } from "@/lib/utils"
 
-const skillCategories = [
+import { DiJava, DiGit, DiGithubBadge } from "react-icons/di"
+import {
+  SiSpringboot,
+  SiReact,
+  SiMysql,
+  SiPostgresql,
+  SiMongodb,
+  SiDocker,
+  SiPostman,
+  SiTailwindcss,
+  SiJavascript,
+  SiHibernate,
+  SiAngular,
+  SiRedis
+} from "react-icons/si"
+import { TbApi } from "react-icons/tb"
+
+const techGroups = [
   {
-    title: "Core Skills",
-    icon: Code2,
-    skills: ["Java", "OOP", "DSA", "Problem Solving", "Clean Code"],
+    id: "backend",
+    items: [
+      { name: "Java", icon: DiJava },
+      { name: "Spring Boot", icon: SiSpringboot },
+      { name: "REST APIs", icon: TbApi },
+      { name: "Hibernate / JPA", icon: SiHibernate },
+    ],
   },
   {
-    title: "Backend",
-    icon: Server,
-    skills: ["Spring Boot", "Spring Security", "Hibernate", "REST APIs", "JPA", "Maven"],
+    id: "databases",
+    items: [
+      { name: "MySQL", icon: SiMysql },
+      { name: "PostgreSQL", icon: SiPostgresql },
+      { name: "MongoDB", icon: SiMongodb },
+      { name: "Redis", icon: SiRedis },
+    ],
   },
   {
-    title: "Frontend",
-    icon: Layout,
-    skills: ["HTML", "CSS", "JavaScript", "React (Basic)", "Tailwind CSS"],
+    id: "tools",
+    items: [
+      { name: "Git", icon: DiGit },
+      { name: "GitHub", icon: DiGithubBadge },
+      { name: "Postman", icon: SiPostman },
+      { name: "Docker", icon: SiDocker },
+    ],
   },
   {
-    title: "Databases",
-    icon: Database,
-    skills: ["MySQL", "MongoDB", "SQL Queries"],
-  },
-  {
-    title: "Tools",
-    icon: Wrench,
-    skills: ["Git", "GitHub", "Postman", "Docker", "VS Code", "IntelliJ IDEA"],
+    id: "frontend",
+    items: [
+      { name: "React", icon: SiReact },
+      { name: "Angular", icon: SiAngular },
+      { name: "Tailwind CSS", icon: SiTailwindcss },
+      { name: "JavaScript", icon: SiJavascript },
+    ],
   },
 ]
 
 export function SkillsSection() {
-  const sectionRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("opacity-100", "translate-y-0")
-            entry.target.classList.remove("opacity-0", "translate-y-8")
-          }
-        })
-      },
-      { threshold: 0.1 },
-    )
-
-    const elements = sectionRef.current?.querySelectorAll(".fade-up")
-    elements?.forEach((el) => observer.observe(el))
-
-    return () => observer.disconnect()
-  }, [])
+  const ref = useRef<HTMLDivElement>(null)
+  const isInView = useInView(ref, { once: true, margin: "-100px" })
 
   return (
-    <section id="skills" ref={sectionRef} className="py-24 bg-muted/30">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="fade-up opacity-0 translate-y-8 transition-all duration-700 text-3xl sm:text-4xl font-bold mb-4">
-            Skills & Technologies
+    <section id="skills" className="py-24 relative overflow-hidden bg-background">
+      <div 
+        ref={ref} 
+        className="relative max-w-5xl mx-auto px-5 sm:px-6 lg:px-8"
+        data-visible={isInView}
+      >
+        <div className="text-center mb-16 fade-up-el delay-0">
+          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-gray-900 dark:text-white">
+            Technologies I Work With
           </h2>
-          <p className="fade-up opacity-0 translate-y-8 transition-all duration-700 text-muted-foreground max-w-2xl mx-auto">
-            A comprehensive toolkit for building robust backend systems and modern web applications
+          <p className="mt-3 text-sm sm:text-base text-gray-500 dark:text-gray-400">
+            Focused on backend systems & scalable APIs
           </p>
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {skillCategories.map((category, index) => (
-            <div
-              key={category.title}
-              className="fade-up opacity-0 translate-y-8 transition-all duration-700"
-              style={{ transitionDelay: `${(index + 1) * 100}ms` }}
+        <div className="flex flex-col gap-8 sm:gap-10">
+          {techGroups.map((group, groupIndex) => (
+            <div 
+              key={group.id} 
+              className={cn(
+                "grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5 fade-up-el",
+                group.id === "frontend" && "opacity-80 hover:opacity-100 transition-opacity"
+              )}
+              style={isInView ? { animationDelay: `${(groupIndex + 1) * 100}ms` } : undefined}
             >
-              <div className="h-full p-6 bg-card rounded-xl border border-border hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/5 group">
-                <div className="flex items-center gap-3 mb-5">
-                  <div className="p-2.5 rounded-lg bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
-                    <category.icon className="h-5 w-5" />
-                  </div>
-                  <h3 className="font-semibold text-lg">{category.title}</h3>
+              {group.items.map((tech) => (
+                <div
+                  key={tech.name}
+                  className={cn(
+                    "group flex flex-col items-center justify-center p-4 sm:p-5 rounded-xl border transition-all duration-300",
+                    "bg-white/40 dark:bg-white/[0.02] backdrop-blur-sm",
+                    "border-black/5 dark:border-white/10",
+                    "hover:border-[#00d47a]/50 dark:hover:border-[#00ff9f]/50",
+                    "hover:shadow-[0_0_20px_rgba(0,212,122,0.15)] dark:hover:shadow-[0_0_20px_rgba(0,255,159,0.15)]",
+                    "hover:-translate-y-1 transform-gpu",
+                    group.id === "backend" ? "py-6 sm:py-7" : ""
+                  )}
+                >
+                  <tech.icon
+                    className={cn(
+                      "mb-3 transition-colors duration-300",
+                      group.id === "backend" ? "w-10 h-10" : "w-8 h-8",
+                      "text-gray-500/80 dark:text-white/60",
+                      "group-hover:text-[#00d47a] dark:group-hover:text-[#00ff9f]"
+                    )}
+                  />
+                  <span
+                    className={cn(
+                      "font-medium text-center transition-colors duration-300",
+                      group.id === "backend" ? "text-[15px]" : "text-[13px]",
+                      "text-gray-600 dark:text-gray-400",
+                      "group-hover:text-gray-900 dark:group-hover:text-white"
+                    )}
+                  >
+                    {tech.name}
+                  </span>
                 </div>
-                <div className="flex flex-wrap gap-2">
-                  {category.skills.map((skill) => (
-                    <span
-                      key={skill}
-                      className="px-3 py-1.5 text-sm bg-muted rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/80 transition-colors"
-                    >
-                      {skill}
-                    </span>
-                  ))}
-                </div>
-              </div>
+              ))}
             </div>
           ))}
         </div>
       </div>
+
+      <style>{`
+        .fade-up-el {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        [data-visible="true"] .fade-up-el {
+          animation: fadeUp 0.5s ease-out forwards;
+        }
+        @keyframes fadeUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      `}</style>
     </section>
   )
 }

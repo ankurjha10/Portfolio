@@ -11,12 +11,13 @@ import { SplashScreen } from "@/components/splash-screen"
 import { SplashScreenProvider } from "@/providers/splash-screen-provider"
 import "./globals.css"
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" })
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
   variable: "--font-mono",
+  display: "swap",
 })
-const noto = Noto_Sans({ subsets: ["latin"], variable: "--font-noto" })
+const noto = Noto_Sans({ subsets: ["latin"], variable: "--font-noto", display: "swap" })
 
 export const metadata: Metadata = {
   title: "Ankur Jha — Full Stack Java Developer Portfolio",
@@ -56,7 +57,6 @@ export default function RootLayout({
         <link rel="preload" href="/fonts/Samarkan.ttf" as="font" type="font/ttf" crossOrigin="anonymous" />
         <style>{`
           body.splash-active > *:not([data-splash]) {
-            opacity: 0;
             pointer-events: none;
           }
         `}</style>
